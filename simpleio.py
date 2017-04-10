@@ -30,7 +30,7 @@
 The `simpleio` module contains classes to provide simple access to IO.
 """
 
-import nativeio
+import digitalio
 import math
 from neopixel_write import neopixel_write
 
@@ -39,7 +39,7 @@ class DigitalOut:
     Simple digital output that is valid until soft reset.
     """
     def __init__(self, pin):
-        self.io = nativeio.DigitalInOut(pin)
+        self.io = digitalio.DigitalInOut(pin)
         self.io.switch_to_output()
 
     @property
@@ -56,7 +56,7 @@ class DigitalIn:
     Simple digital input that is valid until soft reset.
     """
     def __init__(self, pin):
-        self.io = nativeio.DigitalInOut(pin)
+        self.io = digitalio.DigitalInOut(pin)
         self.io.switch_to_input()
 
     @property
@@ -90,7 +90,7 @@ class NeoPixel:
                 pixels[i] = RED
     """
     def __init__(self, pin, n, rgbw=False):
-        self.pin = nativeio.DigitalInOut(pin)
+        self.pin = digitalio.DigitalInOut(pin)
         self.pin.switch_to_output()
         self.bpp = 3
         if rgbw:
