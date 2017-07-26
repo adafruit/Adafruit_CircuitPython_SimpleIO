@@ -25,11 +25,38 @@
 
 The `simpleio` module contains classes to provide simple access to IO.
 """
-
+import audioio
+import array
 import digitalio
 import pulseio
 import math
 import time
+
+def tone(pin, frequency, duration = 1):
+    """
+    Generates a square wave of the specified frequency (50% duty cycle)
+    on a pin
+
+    :param ~microcontroller.Pin Pin: Pin on which to output the tone
+    :param int frequency: Frequency of tone in Hz
+    :param int duration: Duration of tone in seconds (optional)
+    """
+    try:
+        length = 4000 // frequency
+        square_wave = array.array("H", [0] * length)
+        for i in range(length):
+            if i < length / 2:
+                square_wave.append(0xFFFF)
+            else:
+                square_wave.append(0x00)
+        with audioio.AudioOut(pin, square_wave) as waveform:
+            waveform.play(loop=True)
+            time.sleep(duration)
+            waveform.stop()
+    except ValueError:
+        with pulseio.PWMOut(pin, frequency = frequency, variable_frequency = False) as pwm:
+            pwm.duty_cycle = 0x8000
+            time.sleep(duration)
 
 def shift_in(dataPin, clock, msb_first=True):
     """
