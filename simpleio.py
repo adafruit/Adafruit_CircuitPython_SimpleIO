@@ -23,16 +23,11 @@
 `simpleio` - Simple, beginner friendly IO.
 =================================================
 
-.. module:: simpleio
-  :synopsis: Simple, beginner friendly IO.
-  :platform: SAMD21, ESP8266
-
 The `simpleio` module contains classes to provide simple access to IO.
 """
 
 import digitalio
 import math
-from neopixel_write import neopixel_write
 
 class DigitalOut:
     """
