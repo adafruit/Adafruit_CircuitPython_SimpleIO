@@ -31,6 +31,7 @@ The `simpleio` module contains classes to provide simple access to IO.
 """
 
 import digitalio
+import math
 import time
 
 from neopixel_write import neopixel_write
@@ -40,9 +41,9 @@ def shiftIn(dataPin, clock, msb_first=True):
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
     MSB.
 
-    :param dataPin: pin on which to input each bit
-    :param clock: toggles to signal dataPin reads
-    :param msb_first: order to shift bits (least significant or most significant bit first)
+    :param ~digitalio.DigitalInOut dataPin: pin on which to input each bit
+    :param ~digitalio.DigitalInOut clock: toggles to signal dataPin reads
+    :param bool msb_first: True when the first bit is most significant
     :return: returns the value read
     :rtype: int
     """
@@ -52,10 +53,10 @@ def shiftIn(dataPin, clock, msb_first=True):
 
     for i in range(0, 8):
         clock.value = True
-        if msb_first == False:
-            value |= ((dataPin.value) << i)
-        else:
+        if msb_first:
             value |= ((dataPin.value) << (7-i))
+        else:
+            value |= ((dataPin.value) << i)
         clock.value = False
         i+=1
     return value
@@ -65,12 +66,12 @@ def shiftOut(dataPin, clock, value, msb_first=True):
     Shifts out a byte of data one bit at a time. Data gets written to a data
     pin. Then, the clock pulses hi then low
 
-    :param dataPin: value bits get output on this pin
-    :param clock: toggled once the data pin is set
-    :param msb_first: order to shift bits (least significant or most significant bit first)
+    :param ~digitalio.DigitalInOut dataPin: value bits get output on this pin
+    :param ~digitalio.DigitalInOut clock: toggled once the data pin is set
+    :param bool msb_first: True when the first bit is most significant
     :param value: byte to be shifted
 
-    Example for Metro Express:
+    Example for Metro M0 Express:
 
     .. code-block:: python
 
@@ -84,18 +85,20 @@ def shiftOut(dataPin, clock, value, msb_first=True):
 
         while True:
             valueSend = 500
-            shiftOut(dataPin, clock, 'LSBFIRST', (valueSend>>8))
-            shiftOut(dataPin, clock, 'LSBFIRST', valueSend)
-            shiftOut(dataPin, clock, 'MSBFIRST', (valueSend>>8))
-            shiftOut(dataPin, clock, 'MSBFIRST', valueSend)
+            # shifting out least significant bits
+            shiftOut(dataPin, clock, (valueSend>>8), msb_first = False)
+            shiftOut(dataPin, clock, valueSend, msb_first = False)
+            # shifting out most significant bits
+            shiftOut(dataPin, clock, (valueSend>>8))
+            shiftOut(dataPin, clock, valueSend)
     """
     value = value&0xFF
     for i in range(0, 8):
-        if msb_first == False:
-            tmpval = bool((value & (1 << i)))
+        if msb_first:
+            tmpval = bool(value & (1 << (7-i)))
             dataPin.value = tmpval
         else:
-            tmpval = bool(value & (1 << (7-i)))
+            tmpval = bool((value & (1 << i)))
             dataPin.value = tmpval
 
 class DigitalOut:
