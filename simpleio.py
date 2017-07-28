@@ -69,7 +69,7 @@ def shiftOut(dataPin, clock, value, msb_first=True):
     :param ~digitalio.DigitalInOut dataPin: value bits get output on this pin
     :param ~digitalio.DigitalInOut clock: toggled once the data pin is set
     :param bool msb_first: True when the first bit is most significant
-    :param value: byte to be shifted
+    :param int value: byte to be shifted
 
     Example for Metro M0 Express:
 
