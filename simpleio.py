@@ -30,7 +30,7 @@ import digitalio
 import math
 import time
 
-def shiftIn(dataPin, clock, msb_first=True):
+def shift_in(dataPin, clock, msb_first=True):
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
     MSB.
@@ -55,7 +55,7 @@ def shiftIn(dataPin, clock, msb_first=True):
         i+=1
     return value
 
-def shiftOut(dataPin, clock, value, msb_first=True):
+def shift_out(dataPin, clock, value, msb_first=True):
     """
     Shifts out a byte of data one bit at a time. Data gets written to a data
     pin. Then, the clock pulses hi then low
@@ -80,11 +80,11 @@ def shiftOut(dataPin, clock, value, msb_first=True):
         while True:
             valueSend = 500
             # shifting out least significant bits
-            shiftOut(dataPin, clock, (valueSend>>8), msb_first = False)
-            shiftOut(dataPin, clock, valueSend, msb_first = False)
+            shift_out(dataPin, clock, (valueSend>>8), msb_first = False)
+            shift_out(dataPin, clock, valueSend, msb_first = False)
             # shifting out most significant bits
-            shiftOut(dataPin, clock, (valueSend>>8))
-            shiftOut(dataPin, clock, valueSend)
+            shift_out(dataPin, clock, (valueSend>>8))
+            shift_out(dataPin, clock, valueSend)
     """
     value = value&0xFF
     for i in range(0, 8):
