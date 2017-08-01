@@ -2,15 +2,17 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-simpleio2/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/simpleio2/en/latest/
+.. image:: https://readthedocs.org/projects/adafruit-circuitpython-simpleio/badge/?version=latest
+    :target: https://circuitpython.readthedocs.io/projects/simpleio/en/latest/
     :alt: Documentation Status
 
 .. image :: https://badges.gitter.im/adafruit/circuitpython.svg
     :target: https://gitter.im/adafruit/circuitpython?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
     :alt: Gitter
 
-TODO
+SimpleIO features a number of helpers to simplify hardware interactions. Many
+of the functions and classes are inspired by Arduino APIs to make it easier to
+move to CircuitPython from Arduino.
 
 Dependencies
 =============
@@ -31,7 +33,7 @@ Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_CircuitPython_simpleio2/blob/master/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_CircuitPython_SimpleIO/blob/master/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
 API Reference

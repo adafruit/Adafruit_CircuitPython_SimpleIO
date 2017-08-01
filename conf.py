@@ -15,6 +15,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+autodoc_mock_imports = ["digitalio", "neopixel_write"]
+
 intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),'CircuitPython': ('https://circuitpython.readthedocs.io/en/latest/', None)}
 
 # Add any paths that contain templates here, relative to this directory.
@@ -26,7 +28,7 @@ source_suffix = '.rst'
 master_doc = 'README'
 
 # General information about the project.
-project = u'Adafruit SIMPLEIO2 Library'
+project = u'Adafruit CircuitPython SimpleIO Library'
 copyright = u'2017 Scott Shawcroft'
 author = u'Scott Shawcroft'
 
@@ -91,7 +93,7 @@ else:
 html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'AdafruitSIMPLEIO2Librarydoc'
+htmlhelp_basename = 'AdafruitSimpleIOLibrarydoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -117,8 +119,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'AdafruitSIMPLEIO2Library.tex', u'Adafruit SIMPLEIO2 Library Documentation',
-     u'Phiilip Moyer', 'manual'),
+    (master_doc, 'AdafruitSimpleIOLibrary.tex', u'Adafruit SimpleIO Library Documentation',
+     u'Scott Shawcroft', 'manual'),
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -126,7 +128,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'adafruitSIMPLEIO2library', u'Adafruit SIMPLEIO2 Library Documentation',
+    (master_doc, 'adafruitSimpleIOlibrary', u'Adafruit SimpleIO Library Documentation',
      [author], 1)
 ]
 
@@ -136,7 +138,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'AdafruitSIMPLEIO2Library', u'Adafruit SIMPLEIO2 Library Documentation',
-     author, 'AdafruitSIMPLEIO2Library', 'One line description of project.',
+    (master_doc, 'AdafruitSimpleIOLibrary', u'Adafruit SimpleIO Library Documentation',
+     author, 'AdafruitSimpleIOLibrary', 'One line description of project.',
      'Miscellaneous'),
 ]

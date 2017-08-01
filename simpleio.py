@@ -23,18 +23,12 @@
 `simpleio` - Simple, beginner friendly IO.
 =================================================
 
-.. module:: simpleio
-  :synopsis: Simple, beginner friendly IO.
-  :platform: SAMD21, ESP8266
-
 The `simpleio` module contains classes to provide simple access to IO.
 """
 
 import digitalio
 import math
 import time
-
-from neopixel_write import neopixel_write
 
 def shiftIn(dataPin, clock, msb_first=True):
     """
@@ -135,94 +129,12 @@ class DigitalIn:
     def value(self, value):
         raise AttributeError("Cannot set the value on a digital input.")
 
-class NeoPixel:
+def map_range(x, in_min, in_max, out_min, out_max):
     """
-    A sequence of neopixels.
+    Maps a number from one range to another.
+    Note: This implementation handles values < in_min differently than arduino's map function does.
 
-    :param ~microcontroller.Pin pin: The pinto output neopixel data on.
-    :param int n: The number of neopixels in the chain
-    :param bool rgbw: True if the neopixels are RGBW
-
-    Example for Circuit Playground Express:
-
-    .. code-block:: python
-
-        import simpleio
-        from board import *
-
-        RED = 0x100000
-
-        with simpleio.NeoPixel(NEOPIXEL, 10) as pixels:
-            for i in len(pixels):
-                pixels[i] = RED
+    :return: Returns value mapped to new range
+    :rtype: float
     """
-    def __init__(self, pin, n, rgbw=False):
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.switch_to_output()
-        self.bpp = 3
-        if rgbw:
-            self.bpp = 4
-        self.buf = bytearray(n * self.bpp)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exception_type, exception_value, traceback):
-        # Blank out the neopixels.
-        for i in range(len(self.buf)):
-            self.buf[i] = 0
-        neopixel_write(self.pin, self.buf)
-        self.pin.deinit()
-
-    def __repr__(self):
-        return "[" + ", ".join(["0x%06x" % (x,) for x in self]) + "]"
-
-    def _set_item(self, index, value):
-        offset = index * self.bpp
-        r = value >> 16
-        g = (value >> 8) & 0xff
-        b = value & 0xff
-        w = 0
-        # If all components are the same and we have a white pixel then use it
-        # instead of the individual components.
-        if self.bpp == 4 and r == g and g == b:
-            w = r
-            r = 0
-            g = 0
-            b = 0
-        self.buf[offset + 1] = r
-        self.buf[offset] = g
-        self.buf[offset + 2] = b
-        if self.bpp == 4:
-            self.buf[offset + 3] = w
-
-    def __setitem__(self, index, val):
-        if isinstance(index, slice):
-            start, stop, step = index.indices(len(self.buf) // self.bpp)
-            length = stop - start
-            if step != 0:
-                length = math.ceil(length / step)
-            if len(val) != length:
-                raise ValueError("Slice and input sequence size do not match.")
-            for val_i, in_i in enumerate(range(start, stop, step)):
-                self._set_item(in_i, val[val_i])
-        else:
-            self._set_item(index, val)
-
-        neopixel_write(self.pin, self.buf)
-
-    def __getitem__(self, index):
-        if isinstance(index, slice):
-            out = []
-            for in_i in range(*index.indices(len(self.buf) // self.bpp)):
-                out.append(self[in_i])
-            return out
-        offset = index * self.bpp
-        if self.bpp == 4:
-            w = self.buf[offset + 3]
-            if w != 0:
-                return w << 16 | w << 8 | w
-        return self.buf[offset + 1] << 16 | self.buf[offset] << 8 | self.buf[offset + 2]
-
-    def __len__(self):
-        return len(self.buf) // self.bpp
+    return max(min((x-in_min) * (out_max - out_min) / (in_max-in_min) + out_min, out_max), out_min)
