@@ -106,7 +106,7 @@ class Servo:
     """
     Easy control for hobby (3-wire) servos
 
-    :param ~pulseio.PWMOut pin: PWM pin where the servo is located.
+    :param ~microcontroller.Pin pin: PWM pin where the servo is located.
     :param int min_pulse: Minimum amount of microseconds allowed. Varies depending on type of servo.
     :param int max_pulse: Maximum amount of microseconds allowed. Varies depending on type of servo.
 
@@ -131,7 +131,7 @@ class Servo:
             print(pwm.read())
             time.sleep(1)
             # write to the servo in microseconds
-            pwm.set_Microseconds(5500)
+            pwm.set_microseconds(5500)
             time.sleep(1)
     """
     def __init__(self, pin, min_pulse = 0.5, max_pulse = 2.5):
@@ -148,16 +148,17 @@ class Servo:
         dutyPercent = pulseWidth / 20.0
         self.pwm.duty_cycle = int(dutyPercent * 65535)
 
-    def set_Microseconds(self, uS):
+    def set_microseconds(self, uS):
         """Writes a value in microseconds to the servo"""
         ms = (uS/1000)
         ms = max(min(self.max_pulse, ms), self.min_pulse)
+        self.angle = ms
         dutyPercent = ms / 20.0
         self.pwm.duty_cycle = int(dutyPercent * 65535)
 
     def detach(self):
         """Detaches servo object from pin, frees pin"""
-        self.pwm.detach()
+        self.pwm.deinit()
 
     def read(self):
         return self.angle
