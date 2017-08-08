@@ -107,8 +107,8 @@ class Servo:
     Easy control for hobby (3-wire) servos
 
     :param ~microcontroller.Pin pin: PWM pin where the servo is located.
-    :param int min_pulse: Minimum amount of microseconds allowed. Varies depending on type of servo.
-    :param int max_pulse: Maximum amount of microseconds allowed. Varies depending on type of servo.
+    :param int min_pulse: Pulse width (microseconds) corresponding to 0 degrees.
+    :param int max_pulse: Pulse width (microseconds) corresponding to 180 degrees.
 
     Example for Metro M0 Express:
 
@@ -132,8 +132,6 @@ class Servo:
         self.pwm = pulseio.PWMOut(pin, frequency = 50)
         self.min_pulse = min_pulse
         self.max_pulse = max_pulse
-        self._angle = 90
-        self._microseconds = 0
 
     @property
     def angle(self):
