@@ -27,6 +27,7 @@ The `simpleio` module contains classes to provide simple access to IO.
 """
 
 import digitalio
+import pulseio
 import math
 import time
 
@@ -100,6 +101,57 @@ def shift_out(dataPin, clock, value, msb_first=True):
         else:
             tmpval = bool((value & (1 << i)))
             dataPin.value = tmpval
+
+class Servo:
+    """
+    Easy control for hobby (3-wire) servos
+
+    :param ~microcontroller.Pin pin: PWM pin where the servo is located.
+    :param int min_pulse: Pulse width (microseconds) corresponding to 0 degrees.
+    :param int max_pulse: Pulse width (microseconds) corresponding to 180 degrees.
+
+    Example for Metro M0 Express:
+
+    .. code-block:: python
+
+        import simpleio
+        import time
+        from board import *
+
+        pwm = simpleio.Servo(D9)
+
+        while True:
+            pwm.angle = 0
+            print("Angle: ", pwm.angle)
+            time.sleep(2)
+            pwm.angle = pwm.microseconds_to_angle(2500)
+            print("Angle: ", pwm.angle)
+            time.sleep(2)
+    """
+    def __init__(self, pin, min_pulse = 0.5, max_pulse = 2.5):
+        self.pwm = pulseio.PWMOut(pin, frequency = 50)
+        self.min_pulse = min_pulse
+        self.max_pulse = max_pulse
+
+    @property
+    def angle(self):
+        return self._angle
+
+    @angle.setter
+    def angle(self, degrees):
+        """Writes a value in degrees to the servo"""
+        self._angle = max(min(180, degrees), 0)
+        pulseWidth = 0.5 + (self._angle / 180) * (self.max_pulse - self.min_pulse)
+        dutyPercent = pulseWidth / 20.0
+        self.pwm.duty_cycle = int(dutyPercent * 65535)
+
+    def microseconds_to_angle(self, us):
+        """Converts microseconds to a degree value"""
+        return map_range(us, 500, 2500, 0, 180)
+
+    def deinit(self):
+        """Detaches servo object from pin, frees pin"""
+        self.pwm.deinit()
 
 class DigitalOut:
     """
