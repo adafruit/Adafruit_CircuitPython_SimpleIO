@@ -151,7 +151,7 @@ class Servo:
         """Converts microseconds to a degree value"""
         return map_range(us, 500, 2500, 0, 180)
 
-    def detach(self):
+    def deinit(self):
         """Detaches servo object from pin, frees pin"""
         self.pwm.deinit()
 
