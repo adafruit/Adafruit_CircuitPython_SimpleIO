@@ -118,50 +118,42 @@ class Servo:
         import time
         from board import *
 
-        # attach a servo to pin Digital 10
-        pwm = simpleio.Servo(D10)
+        pwm = simpleio.Servo(D9)
 
         while True:
-            # write an angle of 90deg to the servo object
-            pwm.set_angle(90)
-            time.sleep(1)
-            # write an angle of 150deg to the servo object
-            pwm.set_angle(150)
-            # print the location of the servo
-            print(pwm.read())
-            time.sleep(1)
-            # write to the servo in microseconds
-            pwm.set_microseconds(5500)
-            time.sleep(1)
+            pwm.angle = 0
+            print("Angle: ", pwm.angle)
+            time.sleep(2)
+            pwm.angle = pwm.microseconds_to_angle(2500)
+            print("Angle: ", pwm.angle)
+            time.sleep(2)
     """
     def __init__(self, pin, min_pulse = 0.5, max_pulse = 2.5):
         self.pwm = pulseio.PWMOut(pin, frequency = 50)
         self.min_pulse = min_pulse
         self.max_pulse = max_pulse
-        # prevent weird values due to read before write calls
-        self.angle = 90
+        self._angle = 90
+        self._microseconds = 0
 
-    def set_angle(self, angle):
+    @property
+    def angle(self):
+        return self._angle
+
+    @angle.setter
+    def angle(self, degrees):
         """Writes a value in degrees to the servo"""
-        self.angle = max(min(180, angle), 0)
-        pulseWidth = 0.5 + (self.angle / 180) * (self.max_pulse - self.min_pulse)
+        self._angle = max(min(180, degrees), 0)
+        pulseWidth = 0.5 + (self._angle / 180) * (self.max_pulse - self.min_pulse)
         dutyPercent = pulseWidth / 20.0
         self.pwm.duty_cycle = int(dutyPercent * 65535)
 
-    def set_microseconds(self, uS):
-        """Writes a value in microseconds to the servo"""
-        ms = (uS/1000)
-        ms = max(min(self.max_pulse, ms), self.min_pulse)
-        self.angle = ms
-        dutyPercent = ms / 20.0
-        self.pwm.duty_cycle = int(dutyPercent * 65535)
+    def microseconds_to_angle(self, us):
+        """Converts microseconds to a degree value"""
+        return map_range(us, 500, 2500, 0, 180)
 
     def detach(self):
         """Detaches servo object from pin, frees pin"""
         self.pwm.deinit()
-
-    def read(self):
-        return self.angle
 
 class DigitalOut:
     """
