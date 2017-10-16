@@ -58,6 +58,24 @@ def tone(pin, frequency, duration = 1):
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
 
+def bitWrite(x,n,b):
+    """
+    Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
+    The return value is the original value with the changed bit.
+    This function is written for use with 8-bit shift registers
+    
+    :param x: numeric value
+    :param n: position to change starting with least-significant (right-most) bit as 0
+    :param b: value to write (0 or 1)
+    """
+    if b==1:
+        x |= 1<<n & 255
+    else:
+        x &= ~(1 << n) & 255
+    return x           
+            
+            
+            
 def shift_in(dataPin, clock, msb_first=True):
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
@@ -77,11 +95,12 @@ def shift_in(dataPin, clock, msb_first=True):
     i = 0
 
     for i in range(0, 8):
-        clock.value = True
         if msb_first:
             value |= ((dataPin.value) << (7-i))
         else:
             value |= ((dataPin.value) << i)
+        # toggle clock True/False
+        clock.value = True
         clock.value = False
         i+=1
     return value
@@ -108,27 +127,45 @@ def shift_out(dataPin, clock, value, msb_first=True):
         from board import *
         clock = digitalio.DigitalInOut(D12)
         dataPin = digitalio.DigitalInOut(D11)
+        latchPin = digitalio.DigitalInOut(D10)
         clock.direction = digitalio.Direction.OUTPUT
         dataPin.direction = digitalio.Direction.OUTPUT
+        latchPin.direction = digitalio.Direction.OUTPUT
 
         while True:
             valueSend = 500
             # shifting out least significant bits
+            # must toggle latchPin.value before and after shift_out to push to IC chip
+            # this sample code was tested using 
+            latchPin.value = False
             simpleio.shift_out(dataPin, clock, (valueSend>>8), msb_first = False)
+            latchPin.value = True
+            time.sleep(1.0)
+            latchPin.value = False
             simpleio.shift_out(dataPin, clock, valueSend, msb_first = False)
+            latchPin.value = True
+            time.sleep(1.0)
+            
             # shifting out most significant bits
+            latchPin.value = False
             simpleio.shift_out(dataPin, clock, (valueSend>>8))
+            latchPin.value = True
+            time.sleep(1.0)
+            latchpin.value = False
             simpleio.shift_out(dataPin, clock, valueSend)
+            latchpin.value = True
+            time.sleep(1.0)
     """
     value = value&0xFF
     for i in range(0, 8):
-        clock.value = True
         if msb_first:
             tmpval = bool(value & (1 << (7-i)))
             dataPin.value = tmpval
         else:
             tmpval = bool((value & (1 << i)))
             dataPin.value = tmpval
+        # toggle clock pin True/False
+        clock.value = True
         clock.value = False
 
 class Servo:
