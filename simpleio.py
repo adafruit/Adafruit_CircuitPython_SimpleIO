@@ -122,12 +122,14 @@ def shift_out(dataPin, clock, value, msb_first=True):
     """
     value = value&0xFF
     for i in range(0, 8):
+        clock.value = True
         if msb_first:
             tmpval = bool(value & (1 << (7-i)))
             dataPin.value = tmpval
         else:
             tmpval = bool((value & (1 << i)))
             dataPin.value = tmpval
+        clock.value = False
 
 class Servo:
     """
