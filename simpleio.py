@@ -25,7 +25,10 @@
 
 The `simpleio` module contains classes to provide simple access to IO.
 """
-import audioio
+try:
+    import audioio
+except ImportError:
+    pass # not always supported by every board!
 import array
 import digitalio
 import pulseio
@@ -53,7 +56,7 @@ def tone(pin, frequency, duration = 1):
             waveform.play(loop=True)
             time.sleep(duration)
             waveform.stop()
-    except ValueError:
+    except (NameError, ValueError):
         with pulseio.PWMOut(pin, frequency = frequency, variable_frequency = False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
