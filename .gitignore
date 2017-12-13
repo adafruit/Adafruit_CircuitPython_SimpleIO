@@ -90,3 +90,6 @@ ENV/
 
 # ReadTheDocs
 _build
+
+build*
+bundles

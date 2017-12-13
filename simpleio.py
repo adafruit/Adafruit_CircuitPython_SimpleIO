@@ -25,6 +25,7 @@
 
 The `simpleio` module contains classes to provide simple access to IO.
 """
+import time
 try:
     import audioio
 except ImportError:
@@ -32,10 +33,8 @@ except ImportError:
 import array
 import digitalio
 import pulseio
-import math
-import time
 
-def tone(pin, frequency, duration = 1):
+def tone(pin, frequency, duration=1):
     """
     Generates a square wave of the specified frequency (50% duty cycle)
     on a pin
@@ -57,29 +56,29 @@ def tone(pin, frequency, duration = 1):
             time.sleep(duration)
             waveform.stop()
     except (NameError, ValueError):
-        with pulseio.PWMOut(pin, frequency = frequency, variable_frequency = False) as pwm:
+        with pulseio.PWMOut(pin, frequency=frequency, variable_frequency=False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
 
-def bitWrite(x,n,b):
+def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     """
     Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
     The return value is the original value with the changed bit.
     This function is written for use with 8-bit shift registers
-    
+
     :param x: numeric value
     :param n: position to change starting with least-significant (right-most) bit as 0
     :param b: value to write (0 or 1)
     """
-    if b==1:
+    if b == 1:
         x |= 1<<n & 255
     else:
         x &= ~(1 << n) & 255
-    return x           
-            
-            
-            
-def shift_in(dataPin, clock, msb_first=True):
+    return x
+
+
+
+def shift_in(data_pin, clock, msb_first=True):
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
     MSB.
@@ -87,8 +86,8 @@ def shift_in(dataPin, clock, msb_first=True):
     .. warning:: Data and clock are swapped compared to other CircuitPython libraries
       in order to match Arduino.
 
-    :param ~digitalio.DigitalInOut dataPin: pin on which to input each bit
-    :param ~digitalio.DigitalInOut clock: toggles to signal dataPin reads
+    :param ~digitalio.DigitalInOut data_pin: pin on which to input each bit
+    :param ~digitalio.DigitalInOut clock: toggles to signal data_pin reads
     :param bool msb_first: True when the first bit is most significant
     :return: returns the value read
     :rtype: int
@@ -99,16 +98,16 @@ def shift_in(dataPin, clock, msb_first=True):
 
     for i in range(0, 8):
         if msb_first:
-            value |= ((dataPin.value) << (7-i))
+            value |= ((data_pin.value) << (7-i))
         else:
-            value |= ((dataPin.value) << i)
+            value |= ((data_pin.value) << i)
         # toggle clock True/False
         clock.value = True
         clock.value = False
-        i+=1
+        i += 1
     return value
 
-def shift_out(dataPin, clock, value, msb_first=True):
+def shift_out(data_pin, clock, value, msb_first=True):
     """
     Shifts out a byte of data one bit at a time. Data gets written to a data
     pin. Then, the clock pulses hi then low
@@ -116,7 +115,7 @@ def shift_out(dataPin, clock, value, msb_first=True):
     .. warning:: Data and clock are swapped compared to other CircuitPython libraries
       in order to match Arduino.
 
-    :param ~digitalio.DigitalInOut dataPin: value bits get output on this pin
+    :param ~digitalio.DigitalInOut data_pin: value bits get output on this pin
     :param ~digitalio.DigitalInOut clock: toggled once the data pin is set
     :param bool msb_first: True when the first bit is most significant
     :param int value: byte to be shifted
@@ -129,33 +128,33 @@ def shift_out(dataPin, clock, value, msb_first=True):
         import simpleio
         from board import *
         clock = digitalio.DigitalInOut(D12)
-        dataPin = digitalio.DigitalInOut(D11)
+        data_pin = digitalio.DigitalInOut(D11)
         latchPin = digitalio.DigitalInOut(D10)
         clock.direction = digitalio.Direction.OUTPUT
-        dataPin.direction = digitalio.Direction.OUTPUT
+        data_pin.direction = digitalio.Direction.OUTPUT
         latchPin.direction = digitalio.Direction.OUTPUT
 
         while True:
             valueSend = 500
             # shifting out least significant bits
             # must toggle latchPin.value before and after shift_out to push to IC chip
-            # this sample code was tested using 
+            # this sample code was tested using
             latchPin.value = False
-            simpleio.shift_out(dataPin, clock, (valueSend>>8), msb_first = False)
+            simpleio.shift_out(data_pin, clock, (valueSend>>8), msb_first = False)
             latchPin.value = True
             time.sleep(1.0)
             latchPin.value = False
-            simpleio.shift_out(dataPin, clock, valueSend, msb_first = False)
+            simpleio.shift_out(data_pin, clock, valueSend, msb_first = False)
             latchPin.value = True
             time.sleep(1.0)
-            
+
             # shifting out most significant bits
             latchPin.value = False
-            simpleio.shift_out(dataPin, clock, (valueSend>>8))
+            simpleio.shift_out(data_pin, clock, (valueSend>>8))
             latchPin.value = True
             time.sleep(1.0)
             latchpin.value = False
-            simpleio.shift_out(dataPin, clock, valueSend)
+            simpleio.shift_out(data_pin, clock, valueSend)
             latchpin.value = True
             time.sleep(1.0)
     """
@@ -163,10 +162,10 @@ def shift_out(dataPin, clock, value, msb_first=True):
     for i in range(0, 8):
         if msb_first:
             tmpval = bool(value & (1 << (7-i)))
-            dataPin.value = tmpval
+            data_pin.value = tmpval
         else:
             tmpval = bool((value & (1 << i)))
-            dataPin.value = tmpval
+            data_pin.value = tmpval
         # toggle clock pin True/False
         clock.value = True
         clock.value = False
@@ -197,24 +196,26 @@ class Servo:
             print("Angle: ", pwm.angle)
             time.sleep(2)
     """
-    def __init__(self, pin, min_pulse = 0.5, max_pulse = 2.5):
-        self.pwm = pulseio.PWMOut(pin, frequency = 50)
+    def __init__(self, pin, min_pulse=0.5, max_pulse=2.5):
+        self.pwm = pulseio.PWMOut(pin, frequency=50)
         self.min_pulse = min_pulse
         self.max_pulse = max_pulse
+        self._angle = None
 
     @property
     def angle(self):
+        """Get and set the servo angle in degrees"""
         return self._angle
 
     @angle.setter
     def angle(self, degrees):
         """Writes a value in degrees to the servo"""
         self._angle = max(min(180, degrees), 0)
-        pulseWidth = 0.5 + (self._angle / 180) * (self.max_pulse - self.min_pulse)
-        dutyPercent = pulseWidth / 20.0
-        self.pwm.duty_cycle = int(dutyPercent * 65535)
+        pulse_width = 0.5 + (self._angle / 180) * (self.max_pulse - self.min_pulse)
+        duty_percent = pulse_width / 20.0
+        self.pwm.duty_cycle = int(duty_percent * 65535)
 
-    def microseconds_to_angle(self, us):
+    def microseconds_to_angle(self, us): #pylint: disable-msg=no-self-use, invalid-name
         """Converts microseconds to a degree value"""
         return map_range(us, 500, 2500, 0, 180)
 
@@ -227,33 +228,33 @@ class DigitalOut:
     Simple digital output that is valid until soft reset.
     """
     def __init__(self, pin):
-        self.io = digitalio.DigitalInOut(pin)
-        self.io.switch_to_output()
+        self.iopin = digitalio.DigitalInOut(pin)
+        self.iopin.switch_to_output()
 
     @property
     def value(self):
         """The digital logic level of the output pin."""
-        return self.io.value
+        return self.iopin.value
 
     @value.setter
     def value(self, value):
-        self.io.value = value
+        self.iopin.value = value
 
 class DigitalIn:
     """
     Simple digital input that is valid until soft reset.
     """
     def __init__(self, pin):
-        self.io = digitalio.DigitalInOut(pin)
-        self.io.switch_to_input()
+        self.iopin = digitalio.DigitalInOut(pin)
+        self.iopin.switch_to_input()
 
     @property
     def value(self):
         """The digital logic level of the input pin."""
-        return self.io.value
+        return self.iopin.value
 
     @value.setter
-    def value(self, value):
+    def value(self, value): #pylint: disable-msg=no-self-use, unused-argument
         raise AttributeError("Cannot set the value on a digital input.")
 
 def map_range(x, in_min, in_max, out_min, out_max):
