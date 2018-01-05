@@ -34,7 +34,7 @@ import array
 import digitalio
 import pulseio
 
-def tone(pin, frequency, duration=1):
+def tone(pin, frequency, duration=1, length=100):
     """
     Generates a square wave of the specified frequency on a pin
 
@@ -43,16 +43,15 @@ def tone(pin, frequency, duration=1):
     :param int length: Variable size buffer (optional)
     :param int duration: Duration of tone in seconds (optional)
     """
-def tone(pin, frequency, length = 100, duration = 1):
     try:
         sample_length = length
-        s = array.array("H", [0] * sample_length)
+        square_wave = array.array("H", [0] * sample_length)
         for i in range(sample_length / 2):
-            s[i] = 0xFFFF
-        sample_tone = audioio.AudioOut(pin, s)
-        sample_tone.frequency = int(len(s) * frequency)
+            square_wave[i] = 0xFFFF
+        sample_tone = audioio.AudioOut(pin, square_wave)
+        sample_tone.frequency = int(len(square_wave) * frequency)
         if not sample_tone.playing:
-            sample_tone.play(loop = True)
+            sample_tone.play(loop=True)
             time.sleep(duration)
         sample_tone.stop()
     except(NameError, ValueError):
