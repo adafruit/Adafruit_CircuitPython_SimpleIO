@@ -44,6 +44,10 @@ def tone(pin, frequency, duration=1, length=100):
     :param int duration: Duration of tone in seconds (optional)
     """
     try:
+        with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
+            pwm.duty_cycle = 0x8000
+            time.sleep(duration)
+    except ValueError:
         sample_length = length
         square_wave = array.array("H", [0] * sample_length)
         for i in range(sample_length / 2):
@@ -54,10 +58,8 @@ def tone(pin, frequency, duration=1, length=100):
             sample_tone.play(loop=True)
             time.sleep(duration)
         sample_tone.stop()
-    except(NameError, ValueError):
-        with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
-            pwm.duty_cycle = 0x8000
-            time.sleep(duration)
+
+
 
 def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     """
