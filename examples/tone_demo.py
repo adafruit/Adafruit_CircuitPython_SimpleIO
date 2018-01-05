@@ -11,5 +11,5 @@ import simpleio
 
 while True:
     for f in (262, 294, 330, 349, 392, 440, 494, 523):
-        simpleio.tone(board.A0, f, 100, 0.25)
+        simpleio.tone(board.A0, f, 0.25)
     time.sleep(1)
