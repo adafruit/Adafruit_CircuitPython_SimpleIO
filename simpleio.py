@@ -34,31 +34,32 @@ import array
 import digitalio
 import pulseio
 
-def tone(pin, frequency, duration=1):
+def tone(pin, frequency, duration=1, length=100):
     """
-    Generates a square wave of the specified frequency (50% duty cycle)
-    on a pin
+    Generates a square wave of the specified frequency on a pin
 
     :param ~microcontroller.Pin Pin: Pin on which to output the tone
-    :param int frequency: Frequency of tone in Hz
+    :param float frequency: Frequency of tone in Hz
+    :param int length: Variable size buffer (optional)
     :param int duration: Duration of tone in seconds (optional)
     """
     try:
-        length = 4000 // frequency
-        square_wave = array.array("H", [0] * length)
-        for i in range(length):
-            if i < length / 2:
-                square_wave.append(0xFFFF)
-            else:
-                square_wave.append(0x00)
-        with audioio.AudioOut(pin, square_wave) as waveform:
-            waveform.play(loop=True)
-            time.sleep(duration)
-            waveform.stop()
-    except (NameError, ValueError):
-        with pulseio.PWMOut(pin, frequency=frequency, variable_frequency=False) as pwm:
+        with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
+    except ValueError:
+        sample_length = length
+        square_wave = array.array("H", [0] * sample_length)
+        for i in range(sample_length / 2):
+            square_wave[i] = 0xFFFF
+        sample_tone = audioio.AudioOut(pin, square_wave)
+        sample_tone.frequency = int(len(square_wave) * frequency)
+        if not sample_tone.playing:
+            sample_tone.play(loop=True)
+            time.sleep(duration)
+        sample_tone.stop()
+
+
 
 def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     """
