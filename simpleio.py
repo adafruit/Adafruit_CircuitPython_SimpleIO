@@ -212,7 +212,7 @@ class Servo:
     def angle(self, degrees):
         """Writes a value in degrees to the servo"""
         self._angle = max(min(180, degrees), 0)
-        pulse_width = 0.5 + (self._angle / 180) * (self.max_pulse - self.min_pulse)
+        pulse_width = self.min_pulse + (self._angle / 180) * (self.max_pulse - self.min_pulse)
         duty_percent = pulse_width / 20.0
         self.pwm.duty_cycle = int(duty_percent * 65535)
 
