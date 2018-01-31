@@ -11,25 +11,25 @@ import digitalio
 import simpleio
 
 # set up clock, data, and latch pins
-CLK = digitalio.DigitalInOut(board.D12)
-CLK.direction = digitalio.Direction.OUTPUT
-DATA = digitalio.DigitalInOut(board.D11)
-LATCH = digitalio.DigitalInOut(board.D10)
-LATCH.direction = digitalio.Direction.OUTPUT
+clk = digitalio.DigitalInOut(board.D12)
+data = digitalio.DigitalInOut(board.D11)
+latch = digitalio.DigitalInOut(board.D10)
+clk.direction = digitalio.Direction.OUTPUT
+latch.direction = digitalio.Direction.OUTPUT
 
 while True:
-    DATA_TO_SEND = 256
-    # shifting 256 bits out of DATA pin
-    LATCH.value = False
-    DATA.direction = digitalio.Direction.OUTPUT
+    data_to_send = 256
+    # shifting 256 bits out of data pin
+    latch.value = False
+    data.direction = digitalio.Direction.OUTPUT
     print('shifting out...')
-    simpleio.shift_out(DATA, CLK, DATA_TO_SEND, msb_first=False)
-    LATCH.value = True
+    simpleio.shift_out(data, clk, data_to_send, msb_first=False)
+    latch.value = True
     time.sleep(3)
 
-    # shifting 256 bits into the DATA pin
-    LATCH.value = False
-    DATA.direction = digitalio.Direction.INPUT
+    # shifting 256 bits into the data pin
+    latch.value = False
+    data.direction = digitalio.Direction.INPUT
     print('shifting in...')
-    simpleio.shift_in(DATA, CLK)
+    simpleio.shift_in(data, clk)
     time.sleep(3)

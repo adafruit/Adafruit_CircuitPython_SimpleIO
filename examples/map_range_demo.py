@@ -8,15 +8,15 @@ import time
 import simpleio
 
 while True:
-    SENSOR_VALUE = 150
+    sensor_value = 150
 
-    # Map the sensor's range from 0<=SENSOR_VALUE<=255 to 0<=SENSOR_VALUE<=1023
-    print('original sensor value: ', SENSOR_VALUE)
-    MAPPED_VALUE = simpleio.map_range(SENSOR_VALUE, 0, 255, 0, 1023)
-    print('mapped sensor value: ', MAPPED_VALUE)
+    # Map the sensor's range from 0<=sensor_value<=255 to 0<=sensor_value<=1023
+    print('original sensor value: ', sensor_value)
+    mapped_value = simpleio.map_range(sensor_value, 0, 255, 0, 1023)
+    print('mapped sensor value: ', mapped_value)
     time.sleep(2)
 
     # Map the new sensor value back to the old range
-    SENSOR_VALUE = simpleio.map_range(MAPPED_VALUE, 0, 1023, 0, 255)
-    print('original value returned: ', SENSOR_VALUE)
+    sensor_value = simpleio.map_range(mapped_value, 0, 1023, 0, 255)
+    print('original value returned: ', sensor_value)
     time.sleep(2)
