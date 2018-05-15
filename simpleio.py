@@ -230,9 +230,12 @@ class DigitalOut:
     """
     Simple digital output that is valid until soft reset.
     """
-    def __init__(self, pin):
+    def __init__(self, pin, value=None, drive_mode=None):
+        """
+        """
+        kwargs = {k: v for k, v in (('value', value), ('drive_mode', drive_mode)) if not v is None}
         self.iopin = digitalio.DigitalInOut(pin)
-        self.iopin.switch_to_output()
+        self.iopin.switch_to_output(**kwargs)
 
     @property
     def value(self):
@@ -247,9 +250,10 @@ class DigitalIn:
     """
     Simple digital input that is valid until soft reset.
     """
-    def __init__(self, pin):
+    def __init__(self, pin, pull=None):
+        kwargs = {k: v for k, v in (('pull', pull),) if not v is None}
         self.iopin = digitalio.DigitalInOut(pin)
-        self.iopin.switch_to_input()
+        self.iopin.switch_to_input(**kwargs)
 
     @property
     def value(self):
