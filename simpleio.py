@@ -232,6 +232,8 @@ class DigitalOut:
     """
     def __init__(self, pin, value=None, drive_mode=None):
         """
+        value and drive_mode: if passed in will be passed to switch_to_output
+            see digitalio.DigitalInOut.switch_to_output for more details
         """
         kwargs = {k: v for k, v in (('value', value), ('drive_mode', drive_mode)) if not v is None}
         self.iopin = digitalio.DigitalInOut(pin)
@@ -251,6 +253,10 @@ class DigitalIn:
     Simple digital input that is valid until soft reset.
     """
     def __init__(self, pin, pull=None):
+        """
+        pull: if passed in will be passed to switch_to_input
+            see digitalio.DigitalInOut.switch_to_input for more details
+        """
         kwargs = {k: v for k, v in (('pull', pull),) if not v is None}
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_input(**kwargs)
