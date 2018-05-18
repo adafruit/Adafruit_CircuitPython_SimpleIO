@@ -228,14 +228,13 @@ class Servo:
 
 class DigitalOut:
     """
-    Simple digital output that is valid until soft reset.
+    Simple digital output that is valid until reload.
+    
+      :param pin microcontroller.Pin: output pin
+      :param value bool: default value
+      :param drive_mode digitalio.DriveMode: drive mode for the output
     """
     def __init__(self, pin, **kwargs):
-        """
-        kwargs will be passed directly to switch_to_output
-            value (bool): default value to set upon switching
-            drive_mode (DriveMode): drive mode for the output
-        """
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_output(**kwargs)
 
@@ -250,13 +249,12 @@ class DigitalOut:
 
 class DigitalIn:
     """
-    Simple digital input that is valid until soft reset.
+    Simple digital input that is valid until reload.
+    
+      :param pin microcontroller.Pin: input pin
+      :param pull digitalio.Pull: pull configuration for the input
     """
     def __init__(self, pin, **kwargs):
-        """
-        kwargs will be passed directly to switch_to_input
-            pull (pull): pull configuration for the input
-        """
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_input(**kwargs)
 
