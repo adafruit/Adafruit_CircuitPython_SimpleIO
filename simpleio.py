@@ -229,7 +229,7 @@ class Servo:
 class DigitalOut:
     """
     Simple digital output that is valid until reload.
-    
+
       :param pin microcontroller.Pin: output pin
       :param value bool: default value
       :param drive_mode digitalio.DriveMode: drive mode for the output
@@ -250,7 +250,7 @@ class DigitalOut:
 class DigitalIn:
     """
     Simple digital input that is valid until reload.
-    
+
       :param pin microcontroller.Pin: input pin
       :param pull digitalio.Pull: pull configuration for the input
     """
