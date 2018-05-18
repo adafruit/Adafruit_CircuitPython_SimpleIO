@@ -236,7 +236,6 @@ class DigitalOut:
             value (bool): default value to set upon switching
             drive_mode (DriveMode): drive mode for the output
         """
-        kwargs = {k: v for k, v in (('value', value), ('drive_mode', drive_mode)) if not v is None}
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_output(**kwargs)
 
