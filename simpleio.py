@@ -230,7 +230,7 @@ class DigitalOut:
     """
     Simple digital output that is valid until soft reset.
     """
-    def __init__(self, pin, value=None, drive_mode=None):
+    def __init__(self, pin, **kwargs):
         """
         kwargs will be passed directly to switch_to_output
             value (bool): default value to set upon switching
