@@ -220,7 +220,7 @@ class Servo:
 
     def microseconds_to_angle(self, us): #pylint: disable-msg=no-self-use, invalid-name
         """Converts microseconds to a degree value"""
-        return map_range(us, 500, 2500, 0, 180)
+        return map_range(us, self.min_pulse * 1000, self.max_pulse * 1000, 0, 180)
 
     def deinit(self):
         """Detaches servo object from pin, frees pin"""
