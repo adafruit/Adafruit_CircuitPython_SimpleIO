@@ -178,8 +178,8 @@ class Servo:
     Easy control for hobby (3-wire) servos
 
     :param ~microcontroller.Pin pin: PWM pin where the servo is located.
-    :param int min_pulse: Pulse width (microseconds) corresponding to 0 degrees.
-    :param int max_pulse: Pulse width (microseconds) corresponding to 180 degrees.
+    :param int min_pulse: Pulse width (milliseconds) corresponding to 0 degrees.
+    :param int max_pulse: Pulse width (milliseconds) corresponding to 180 degrees.
 
     Example for Metro M0 Express:
 
