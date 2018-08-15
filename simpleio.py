@@ -178,8 +178,8 @@ class Servo:
     Easy control for hobby (3-wire) servos
 
     :param ~microcontroller.Pin pin: PWM pin where the servo is located.
-    :param int min_pulse: Pulse width (microseconds) corresponding to 0 degrees.
-    :param int max_pulse: Pulse width (microseconds) corresponding to 180 degrees.
+    :param int min_pulse: Pulse width (milliseconds) corresponding to 0 degrees.
+    :param int max_pulse: Pulse width (milliseconds) corresponding to 180 degrees.
 
     Example for Metro M0 Express:
 
@@ -220,7 +220,7 @@ class Servo:
 
     def microseconds_to_angle(self, us): #pylint: disable-msg=no-self-use, invalid-name
         """Converts microseconds to a degree value"""
-        return map_range(us, 500, 2500, 0, 180)
+        return map_range(us, self.min_pulse * 1000, self.max_pulse * 1000, 0, 180)
 
     def deinit(self):
         """Detaches servo object from pin, frees pin"""
