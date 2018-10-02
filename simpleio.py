@@ -28,6 +28,7 @@ The `simpleio` module contains classes to provide simple access to IO.
 * Author(s): Scott Shawcroft
 """
 import time
+import sys
 try:
     import audioio
 except ImportError:
@@ -45,21 +46,34 @@ def tone(pin, frequency, duration=1, length=100):
     :param int length: Variable size buffer (optional)
     :param int duration: Duration of tone in seconds (optional)
     """
+    if length * frequency > 350000:
+        length = 350000 // frequency
     try:
+        # pin with PWM
         with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
     except ValueError:
+        # pin without PWM
         sample_length = length
         square_wave = array.array("H", [0] * sample_length)
         for i in range(sample_length / 2):
             square_wave[i] = 0xFFFF
-        sample_tone = audioio.AudioOut(pin, square_wave)
-        sample_tone.frequency = int(len(square_wave) * frequency)
-        if not sample_tone.playing:
-            sample_tone.play(loop=True)
-            time.sleep(duration)
-        sample_tone.stop()
+        if sys.implementation.version[0] >= 3:
+            square_wave_sample = audioio.RawSample(square_wave)
+            square_wave_sample.sample_rate = int(len(square_wave) * frequency)
+            with audioio.AudioOut(pin) as dac:
+                if not dac.playing:
+                    dac.play(square_wave_sample, loop=True)
+                    time.sleep(duration)
+                dac.stop()
+        else:
+            sample_tone = audioio.AudioOut(pin, square_wave)
+            sample_tone.frequency = int(len(square_wave) * frequency)
+            if not sample_tone.playing:
+                sample_tone.play(loop=True)
+                time.sleep(duration)
+            sample_tone.stop()
 
 
 
