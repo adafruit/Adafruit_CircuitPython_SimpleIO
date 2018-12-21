@@ -10,8 +10,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_SimpleIO.svg?branch=master
-    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_SimpleIO
+.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_SimpleIO.svg?branch=master
+    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_SimpleIO
     :alt: Build Status
 
 SimpleIO features a number of helpers to simplify hardware interactions. Many
