@@ -1,5 +1,5 @@
 """
-'shift_in_out_demo.py'.
+'simpleio_shift_in_out_demo.py'.
 
 =================================================
 shifts data into and out of a data pin

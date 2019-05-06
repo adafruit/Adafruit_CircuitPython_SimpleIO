@@ -1,5 +1,5 @@
 """
-'map_range_demo.py'.
+'simpleio_map_range_demo.py'.
 
 =================================================
 maps a number from one range to another

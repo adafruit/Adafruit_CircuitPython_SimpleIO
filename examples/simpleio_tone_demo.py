@@ -1,5 +1,5 @@
 """
-'tone_demo.py'.
+'simpleio_tone_demo.py'.
 
 =================================================
 a short piezo song using tone()
