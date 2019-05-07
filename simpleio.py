@@ -50,9 +50,11 @@ def tone(pin, frequency, duration=1, length=100):
         length = 350000 // frequency
     try:
         # pin with PWM
+        #pylint: disable=no-member
         with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
+        #pylint: enable=no-member
     except ValueError:
         # pin without PWM
         sample_length = length
