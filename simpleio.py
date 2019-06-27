@@ -126,7 +126,7 @@ def shift_in(data_pin, clock, msb_first=True):
         i += 1
     return value
 
-def shift_out(data_pin, clock, value, msb_first=True):
+def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
     """
     Shifts out a byte of data one bit at a time. Data gets written to a data
     pin. Then, the clock pulses hi then low
@@ -138,6 +138,7 @@ def shift_out(data_pin, clock, value, msb_first=True):
     :param ~digitalio.DigitalInOut clock: toggled once the data pin is set
     :param bool msb_first: True when the first bit is most significant
     :param int value: byte to be shifted
+    :param unsigned bitcount: number of bits to shift
 
     Example for Metro M0 Express:
 
@@ -177,14 +178,17 @@ def shift_out(data_pin, clock, value, msb_first=True):
             latchpin.value = True
             time.sleep(1.0)
     """
-    value = value&0xFF
-    for i in range(0, 8):
-        if msb_first:
-            tmpval = bool(value & (1 << (7-i)))
-            data_pin.value = tmpval
-        else:
-            tmpval = bool((value & (1 << i)))
-            data_pin.value = tmpval
+    if bitcount < 0:
+        raise ValueError
+    
+    if msb_first:
+        f = lambda : range(bitcount-1, -1, -1)
+    else:
+        f = lambda : range(0, bitcount)
+    
+    for i in f():
+        tmpval = bool(value & (1<<i))
+        data_pin.value = tmpval
         # toggle clock pin True/False
         clock.value = True
         clock.value = False
