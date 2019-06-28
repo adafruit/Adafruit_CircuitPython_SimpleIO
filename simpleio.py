@@ -179,7 +179,7 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
             time.sleep(1.0)
     """
     if bitcount < 0:
-        raise ValueError
+        raise ValueError('bitcount must be positive')
     
     if msb_first:
         f = lambda : range(bitcount-1, -1, -1)
