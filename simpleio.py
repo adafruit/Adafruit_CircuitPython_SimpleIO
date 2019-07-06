@@ -238,7 +238,16 @@ def map_range(x, in_min, in_max, out_min, out_max):
     :return: Returns value mapped to new range
     :rtype: float
     """
-    mapped = (x-in_min) * (out_max - out_min) / (in_max-in_min) + out_min
+    in_range = in_max - in_min
+    in_delta = x - in_min
+    if in_range != 0:
+        mapped = in_delta / in_range
+    elif in_delta != 0:
+        mapped = in_delta
+    else:
+        mapped = .5
+    mapped *= out_max - out_min
+    mapped += out_min
     if out_min <= out_max:
         return max(min(mapped, out_max), out_min)
     return min(max(mapped, out_max), out_min)
