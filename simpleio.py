@@ -178,8 +178,8 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
             latchpin.value = True
             time.sleep(1.0)
     """
-    if bitcount < 0:
-        raise ValueError('bitcount must be positive')
+    if bitcount < 0 or bitcount > 32:
+        raise ValueError('bitcount must be in range 0..32 inclusive')
     
     if msb_first:
         bitsequence = lambda: range(bitcount-1, -1, -1)
