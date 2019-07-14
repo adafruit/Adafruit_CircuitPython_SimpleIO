@@ -182,11 +182,11 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
         raise ValueError('bitcount must be positive')
     
     if msb_first:
-        f = lambda : range(bitcount-1, -1, -1)
+        bitsequence = lambda: range(bitcount-1, -1, -1)
     else:
-        f = lambda : range(0, bitcount)
+        bitsequence = lambda: range(0, bitcount)
     
-    for i in f():
+    for i in bitsequence():
         tmpval = bool(value & (1<<i))
         data_pin.value = tmpval
         # toggle clock pin True/False
