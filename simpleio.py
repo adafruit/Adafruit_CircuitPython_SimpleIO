@@ -28,7 +28,6 @@ The `simpleio` module contains classes to provide simple access to IO.
 * Author(s): Scott Shawcroft
 """
 import time
-import sys
 import array
 import digitalio
 import pulseio
