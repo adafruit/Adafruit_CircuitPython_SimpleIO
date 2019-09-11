@@ -33,6 +33,7 @@ import array
 import digitalio
 import pulseio
 
+#pylint: disable=invalid-name
 def _AudioOut(pin):
     try:
         import audioio
@@ -66,6 +67,7 @@ def _RawSample(buffer):
         return audioio.RawSample(buffer)
 
     raise RuntimeError("AudioOut not available")
+#pylint: enable=invalid-name
 
 def tone(pin, frequency, duration=1, length=100):
     """
