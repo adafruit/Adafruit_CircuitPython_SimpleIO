@@ -31,7 +31,10 @@ import time
 import array
 import digitalio
 import pulseio
-
+try:
+    import audiocore
+except ImportError:
+    import audioio as audiocore
 try:
     from audioio import AudioOut
 except ImportError:
@@ -39,11 +42,6 @@ except ImportError:
         from audiopwmio import PWMAudioOut as AudioOut
     except ImportError:
         pass # not always supported by every board!
-
-try:
-    import audiocore
-except ImportError:
-    import audioio as audiocore
 
 def tone(pin, frequency, duration=1, length=100):
     """
