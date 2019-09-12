@@ -32,41 +32,18 @@ import array
 import digitalio
 import pulseio
 
-#pylint: disable=invalid-name
-def _AudioOut(pin):
+try:
+    from audioio import AudioOut
+except ImportError:
     try:
-        import audioio
+        from audiopwmio import PWMAudioOut as AudioOut
     except ImportError:
-        pass
-    else:
-        return audioio.AudioOut(pin)
+        pass # not always supported by every board!
 
-    try:
-        import audiopwmio
-    except ImportError:
-        pass
-    else:
-        return audiopwmio.PWMAudioOut(pin)
-
-    raise RuntimeError("AudioOut not available")
-
-def _RawSample(buffer):
-    try:
-        import audiocore
-    except ImportError:
-        pass
-    else:
-        return audiocore.RawSample(buffer)
-
-    try:
-        import audioio
-    except ImportError:
-        pass
-    else:
-        return audioio.RawSample(buffer)
-
-    raise RuntimeError("AudioOut not available")
-#pylint: enable=invalid-name
+try:
+    import audiocore
+except ImportError:
+    import audioio as audiocore
 
 def tone(pin, frequency, duration=1, length=100):
     """
@@ -92,9 +69,9 @@ def tone(pin, frequency, duration=1, length=100):
         square_wave = array.array("H", [0] * sample_length)
         for i in range(sample_length / 2):
             square_wave[i] = 0xFFFF
-        square_wave_sample = _RawSample(square_wave)
+        square_wave_sample = audiocore.RawSample(square_wave)
         square_wave_sample.sample_rate = int(len(square_wave) * frequency)
-        with _AudioOut(pin) as dac:
+        with AudioOut(pin) as dac:
             if not dac.playing:
                 dac.play(square_wave_sample, loop=True)
                 time.sleep(duration)
