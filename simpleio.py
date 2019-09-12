@@ -34,7 +34,10 @@ import pulseio
 try:
     import audiocore
 except ImportError:
-    import audioio as audiocore
+    try:
+        import audioio as audiocore
+    except ImportError:
+        pass # not always supported by every board!
 try:
     from audioio import AudioOut
 except ImportError:
