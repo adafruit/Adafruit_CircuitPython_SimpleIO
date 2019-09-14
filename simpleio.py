@@ -28,23 +28,23 @@ The `simpleio` module contains classes to provide simple access to IO.
 * Author(s): Scott Shawcroft
 """
 import time
+import sys
 import array
 import digitalio
 import pulseio
 try:
-    import audiocore
-except ImportError:
-    try:
+    # RawSample was moved in CircuitPython 5.x.
+    if sys.implementation.version[0] >= 5:
+        import audiocore
+    else:
         import audioio as audiocore
-    except ImportError:
-        pass # not always supported by every board!
-try:
-    from audioio import AudioOut
-except ImportError:
+    # Some boards have AudioOut (true DAC), others have PWMAudioOut.
     try:
-        from audiopwmio import PWMAudioOut as AudioOut
+        from audioio import AudioOut
     except ImportError:
-        pass # not always supported by every board!
+        from audiopwmio import PWMAudioOut as AudioOut
+except ImportError:
+    pass # not always supported by every board!
 
 def tone(pin, frequency, duration=1, length=100):
     """
