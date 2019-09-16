@@ -29,13 +29,22 @@ The `simpleio` module contains classes to provide simple access to IO.
 """
 import time
 import sys
-try:
-    import audioio
-except ImportError:
-    pass # not always supported by every board!
 import array
 import digitalio
 import pulseio
+try:
+    # RawSample was moved in CircuitPython 5.x.
+    if sys.implementation.version[0] >= 5:
+        import audiocore
+    else:
+        import audioio as audiocore
+    # Some boards have AudioOut (true DAC), others have PWMAudioOut.
+    try:
+        from audioio import AudioOut
+    except ImportError:
+        from audiopwmio import PWMAudioOut as AudioOut
+except ImportError:
+    pass # not always supported by every board!
 
 def tone(pin, frequency, duration=1, length=100):
     """
@@ -61,21 +70,13 @@ def tone(pin, frequency, duration=1, length=100):
         square_wave = array.array("H", [0] * sample_length)
         for i in range(sample_length / 2):
             square_wave[i] = 0xFFFF
-        if sys.implementation.version[0] >= 3:
-            square_wave_sample = audioio.RawSample(square_wave)
-            square_wave_sample.sample_rate = int(len(square_wave) * frequency)
-            with audioio.AudioOut(pin) as dac:
-                if not dac.playing:
-                    dac.play(square_wave_sample, loop=True)
-                    time.sleep(duration)
-                dac.stop()
-        else:
-            sample_tone = audioio.AudioOut(pin, square_wave)
-            sample_tone.frequency = int(len(square_wave) * frequency)
-            if not sample_tone.playing:
-                sample_tone.play(loop=True)
+        square_wave_sample = audiocore.RawSample(square_wave)
+        square_wave_sample.sample_rate = int(len(square_wave) * frequency)
+        with AudioOut(pin) as dac:
+            if not dac.playing:
+                dac.play(square_wave_sample, loop=True)
                 time.sleep(duration)
-            sample_tone.stop()
+            dac.stop()
 
 
 
