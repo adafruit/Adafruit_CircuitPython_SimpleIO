@@ -46,11 +46,15 @@ try:
 except ImportError:
     pass # not always supported by every board!
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/CircuitPython_SimpleIO.git"
+
+
 def tone(pin, frequency, duration=1, length=100):
     """
     Generates a square wave of the specified frequency on a pin
 
-    :param ~microcontroller.Pin Pin: Pin on which to output the tone
+    :param ~microcontroller.Pin pin: Pin on which to output the tone
     :param float frequency: Frequency of tone in Hz
     :param int length: Variable size buffer (optional)
     :param int duration: Duration of tone in seconds (optional)
@@ -79,7 +83,6 @@ def tone(pin, frequency, duration=1, length=100):
             dac.stop()
 
 
-
 def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     """
     Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
@@ -95,7 +98,6 @@ def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     else:
         x &= ~(1 << n) & 255
     return x
-
 
 
 def shift_in(data_pin, clock, msb_first=True):
@@ -126,6 +128,7 @@ def shift_in(data_pin, clock, msb_first=True):
         clock.value = False
         i += 1
     return value
+
 
 def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
     """
@@ -194,6 +197,7 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
         clock.value = True
         clock.value = False
 
+
 class DigitalOut:
     """
     Simple digital output that is valid until reload.
@@ -215,6 +219,7 @@ class DigitalOut:
     def value(self, value):
         self.iopin.value = value
 
+
 class DigitalIn:
     """
     Simple digital input that is valid until reload.
@@ -234,6 +239,7 @@ class DigitalIn:
     @value.setter
     def value(self, value): #pylint: disable-msg=no-self-use, unused-argument
         raise AttributeError("Cannot set the value on a digital input.")
+
 
 def map_range(x, in_min, in_max, out_min, out_max):
     """
