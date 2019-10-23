@@ -35,14 +35,19 @@ On supported GNU/Linux systems like the Raspberry Pi, you can install the driver
 PyPI <https://pypi.org/project/adafruit-circuitpython-simpleio/>`_. To install for current user:
 
 .. code-block:: shell
+
     pip3 install adafruit-circuitpython-simpleio
+
 To install system-wide (this may be required in some cases):
 
 .. code-block:: shell
+
     sudo pip3 install adafruit-circuitpython-simpleio
+    
 To install in a virtual environment in your current project:
 
 .. code-block:: shell
+
     mkdir project-name && cd project-name
     python3 -m venv .env
     source .env/bin/activate
