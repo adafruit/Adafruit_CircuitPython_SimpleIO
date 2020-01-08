@@ -270,7 +270,7 @@ def convert_temp(temp_f=None, temp_c=None):
     :param temp_f: Fahrenheit temperature value
     :param temp_c: Celsius temperature value
 
-    :return: Returns Fahrenheit value for Celsius input; Celsius value for Fahrenheit input; None for no input
+    :return: Returns Fahrenheit value for Celsius; Celsius value for Fahrenheit; otherwise None
     :rtype: float
 
     Example:
