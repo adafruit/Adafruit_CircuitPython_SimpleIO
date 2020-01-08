@@ -262,3 +262,28 @@ def map_range(x, in_min, in_max, out_min, out_max):
     if out_min <= out_max:
         return max(min(mapped, out_max), out_min)
     return min(max(mapped, out_max), out_min)
+
+def convert_temp(f=None, c=None):
+    """
+    Converts a temperature value to Celsius or Fahrenheit
+
+    :param f: Fahrenheit temperature value
+    :param c: Celsius temperature value
+
+    :return: Returns Fahrenheit value for Celsius input; Celsius value for Fahrenheit input; None for no input
+    :rtype: float
+
+    Example:
+
+    .. code-block:: python
+
+    # Convert from Fahrenheit to Celsius
+    convert_temp(f=212)  # returns a value of 100.0
+
+    # Convert from Celsius to Fahrenheit
+    convert_temp(c=100)  # returns a value of 212.0
+
+    """
+    if f != None and c == None: return (f - 32) * (5 / 9)  # F to C
+    if f == None and c != None: return ((9 / 5) * c) + 32  # C to F
+    return None
