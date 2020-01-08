@@ -4,7 +4,7 @@
 =================================================
 Converts a temperature value to Celsius or Fahrenheit
 """
-from simpleio import *
+from simpleio import convert_temp
 
 while True:
     # Convert from Fahrenheit to Celsius
