@@ -22,7 +22,7 @@ while True:
     # shifting 256 bits out of data pin
     latch.value = False
     data.direction = digitalio.Direction.OUTPUT
-    print('shifting out...')
+    print("shifting out...")
     simpleio.shift_out(data, clk, data_to_send, msb_first=False)
     latch.value = True
     time.sleep(3)
@@ -30,6 +30,6 @@ while True:
     # shifting 256 bits into the data pin
     latch.value = False
     data.direction = digitalio.Direction.INPUT
-    print('shifting in...')
+    print("shifting in...")
     simpleio.shift_in(data, clk)
     time.sleep(3)

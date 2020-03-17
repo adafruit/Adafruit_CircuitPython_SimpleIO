@@ -32,6 +32,7 @@ import sys
 import array
 import digitalio
 import pulseio
+
 try:
     # RawSample was moved in CircuitPython 5.x.
     if sys.implementation.version[0] >= 5:
@@ -44,7 +45,7 @@ try:
     except ImportError:
         from audiopwmio import PWMAudioOut as AudioOut
 except ImportError:
-    pass # not always supported by every board!
+    pass  # not always supported by every board!
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/CircuitPython_SimpleIO.git"
@@ -63,11 +64,13 @@ def tone(pin, frequency, duration=1, length=100):
         length = 350000 // frequency
     try:
         # pin with PWM
-        #pylint: disable=no-member
-        with pulseio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
+        # pylint: disable=no-member
+        with pulseio.PWMOut(
+            pin, frequency=int(frequency), variable_frequency=False
+        ) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
-        #pylint: enable=no-member
+        # pylint: enable=no-member
     except ValueError:
         # pin without PWM
         sample_length = length
@@ -83,7 +86,7 @@ def tone(pin, frequency, duration=1, length=100):
             dac.stop()
 
 
-def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
+def bitWrite(x, n, b):  # pylint: disable-msg=invalid-name
     """
     Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
     The return value is the original value with the changed bit.
@@ -94,7 +97,7 @@ def bitWrite(x, n, b): #pylint: disable-msg=invalid-name
     :param b: value to write (0 or 1)
     """
     if b == 1:
-        x |= 1<<n & 255
+        x |= 1 << n & 255
     else:
         x &= ~(1 << n) & 255
     return x
@@ -120,9 +123,9 @@ def shift_in(data_pin, clock, msb_first=True):
 
     for i in range(0, 8):
         if msb_first:
-            value |= ((data_pin.value) << (7-i))
+            value |= (data_pin.value) << (7 - i)
         else:
-            value |= ((data_pin.value) << i)
+            value |= (data_pin.value) << i
         # toggle clock True/False
         clock.value = True
         clock.value = False
@@ -183,15 +186,15 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
             time.sleep(1.0)
     """
     if bitcount < 0 or bitcount > 32:
-        raise ValueError('bitcount must be in range 0..32 inclusive')
+        raise ValueError("bitcount must be in range 0..32 inclusive")
 
     if msb_first:
-        bitsequence = lambda: range(bitcount-1, -1, -1)
+        bitsequence = lambda: range(bitcount - 1, -1, -1)
     else:
         bitsequence = lambda: range(0, bitcount)
 
     for i in bitsequence():
-        tmpval = bool(value & (1<<i))
+        tmpval = bool(value & (1 << i))
         data_pin.value = tmpval
         # toggle clock pin True/False
         clock.value = True
@@ -206,6 +209,7 @@ class DigitalOut:
       :param value bool: default value
       :param drive_mode digitalio.DriveMode: drive mode for the output
     """
+
     def __init__(self, pin, **kwargs):
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_output(**kwargs)
@@ -227,6 +231,7 @@ class DigitalIn:
       :param pin microcontroller.Pin: input pin
       :param pull digitalio.Pull: pull configuration for the input
     """
+
     def __init__(self, pin, **kwargs):
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_input(**kwargs)
@@ -237,7 +242,7 @@ class DigitalIn:
         return self.iopin.value
 
     @value.setter
-    def value(self, value): #pylint: disable-msg=no-self-use, unused-argument
+    def value(self, value):  # pylint: disable-msg=no-self-use, unused-argument
         raise AttributeError("Cannot set the value on a digital input.")
 
 
@@ -256,7 +261,7 @@ def map_range(x, in_min, in_max, out_min, out_max):
     elif in_delta != 0:
         mapped = in_delta
     else:
-        mapped = .5
+        mapped = 0.5
     mapped *= out_max - out_min
     mapped += out_min
     if out_min <= out_max:
