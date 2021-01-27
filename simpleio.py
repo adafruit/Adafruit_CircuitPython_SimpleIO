@@ -48,7 +48,7 @@ except ImportError:
     pass  # not always supported by every board!
 
 __version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/CircuitPython_SimpleIO.git"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_SimpleIO.git"
 
 
 def tone(pin, frequency, duration=1, length=100):
