@@ -31,7 +31,7 @@ import time
 import sys
 import array
 import digitalio
-import pulseio
+import pwmio
 
 try:
     # RawSample was moved in CircuitPython 5.x.
@@ -65,7 +65,7 @@ def tone(pin, frequency, duration=1, length=100):
     try:
         # pin with PWM
         # pylint: disable=no-member
-        with pulseio.PWMOut(
+        with pwmio.PWMOut(
             pin, frequency=int(frequency), variable_frequency=False
         ) as pwm:
             pwm.duty_cycle = 0x8000
