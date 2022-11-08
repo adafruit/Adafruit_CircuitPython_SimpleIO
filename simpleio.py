@@ -171,12 +171,9 @@ def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
     if bitcount < 0 or bitcount > 32:
         raise ValueError("bitcount must be in range 0..32 inclusive")
 
-    if msb_first:
-        bitsequence = lambda: range(bitcount - 1, -1, -1)
-    else:
-        bitsequence = lambda: range(0, bitcount)
+    bitsequence = range(bitcount - 1, -1, -1) if msb_first else range(bitcount)
 
-    for i in bitsequence():
+    for i in bitsequence:
         tmpval = bool(value & (1 << i))
         data_pin.value = tmpval
         # toggle clock pin True/False
