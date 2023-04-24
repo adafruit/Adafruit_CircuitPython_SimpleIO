@@ -57,7 +57,9 @@ def tone(pin: Pin, frequency: float, duration: int = 1, length: float = 100) -> 
     try:
         # pin with PWM
         # pylint: disable=no-member
-        with pwmio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
+        with pwmio.PWMOut(
+            pin, frequency=int(frequency), variable_frequency=False
+        ) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
         # pylint: enable=no-member
@@ -94,7 +96,9 @@ def bitWrite(x: int, n: int, b: int) -> int:  # pylint: disable-msg=invalid-name
 
 
 def shift_in(
-    data_pin: digitalio.DigitalInOut, clock: digitalio.DigitalInOut, msb_first: bool = True
+    data_pin: digitalio.DigitalInOut,
+    clock: digitalio.DigitalInOut,
+    msb_first: bool = True,
 ) -> int:
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
@@ -237,11 +241,13 @@ class DigitalIn:
         return self.iopin.value
 
     @value.setter
-    def value(self, value: Any) -> None:  # pylint: disable-msg=no-self-use, unused-argument
+    def value(self, value: Any) -> None:  # pylint: disable=no-self-use, unused-argument
         raise AttributeError("Cannot set the value on a digital input.")
 
 
-def map_range(x: float, in_min: float, in_max: float, out_min: float, out_max: float) -> float:
+def map_range(
+    x: float, in_min: float, in_max: float, out_min: float, out_max: float
+) -> float:
     """
     Maps a number from one range to another.
     Note: This implementation handles values < in_min differently than arduino's map function does.
