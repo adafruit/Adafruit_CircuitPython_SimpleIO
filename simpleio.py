@@ -93,7 +93,9 @@ def bitWrite(x: int, n: int, b: int) -> int:  # pylint: disable-msg=invalid-name
     return x
 
 
-def shift_in(data_pin: digitalio.DigitalInOut, clock: digitalio.DigitalInOut, msb_first: bool = True) -> int:
+def shift_in(
+    data_pin: digitalio.DigitalInOut, clock: digitalio.DigitalInOut, msb_first: bool = True
+) -> int:
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
     MSB.
