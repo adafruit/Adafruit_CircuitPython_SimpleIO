@@ -14,7 +14,7 @@ try:
     from typing import Any
 
     from microcontroller import Pin
-except:
+except ImportError:
     pass
 
 import array
