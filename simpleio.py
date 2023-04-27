@@ -241,7 +241,7 @@ class DigitalIn:
         return self.iopin.value
 
     @value.setter
-    def value(self, value: bool) -> None: # pylint: disable=no-self-use
+    def value(self, value: bool) -> None:  # pylint: disable=no-self-use
         raise AttributeError("Cannot set the value on a digital input.")
 
 
