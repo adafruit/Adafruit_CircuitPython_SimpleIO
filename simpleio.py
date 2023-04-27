@@ -214,7 +214,7 @@ class DigitalOut:
         self.iopin.switch_to_output(**kwargs)
 
     @property
-    def value(self) -> Any:
+    def value(self) -> bool:
         """The digital logic level of the output pin."""
         return self.iopin.value
 
@@ -236,12 +236,14 @@ class DigitalIn:
         self.iopin.switch_to_input(**kwargs)
 
     @property
-    def value(self) -> Any:
+    def value(self) -> bool:
         """The digital logic level of the input pin."""
         return self.iopin.value
 
     @value.setter
-    def value(self, value: Any) -> None:  # pylint: disable=no-self-use, unused-argument
+    def value(
+        self, value: bool
+    ) -> None:  # pylint: disable=no-self-use, unused-argument
         raise AttributeError("Cannot set the value on a digital input.")
 
 
