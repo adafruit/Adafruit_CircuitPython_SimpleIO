@@ -10,9 +10,18 @@ The `simpleio` module contains classes to provide simple access to IO.
 
 * Author(s): Scott Shawcroft
 """
-import time
-import sys
+try:
+    from typing import Any
+
+    from microcontroller import Pin
+except ImportError:
+    pass
+
 import array
+import sys
+import time
+from math import floor
+
 import digitalio
 import pwmio
 
@@ -34,13 +43,13 @@ __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_SimpleIO.git"
 
 
-def tone(pin, frequency, duration=1, length=100):
+def tone(pin: Pin, frequency: float, duration: int = 1, length: float = 100) -> None:
     """
     Generates a square wave of the specified frequency on a pin
 
     :param ~microcontroller.Pin pin: Pin on which to output the tone
     :param float frequency: Frequency of tone in Hz
-    :param int length: Variable size buffer (optional)
+    :param float length: Variable size buffer (optional)
     :param int duration: Duration of tone in seconds (optional)
     """
     if length * frequency > 350000:
@@ -56,9 +65,9 @@ def tone(pin, frequency, duration=1, length=100):
         # pylint: enable=no-member
     except ValueError:
         # pin without PWM
-        sample_length = length
+        sample_length = floor(length)
         square_wave = array.array("H", [0] * sample_length)
-        for i in range(sample_length / 2):
+        for i in range(floor(sample_length / 2)):
             square_wave[i] = 0xFFFF
         square_wave_sample = audiocore.RawSample(square_wave)
         square_wave_sample.sample_rate = int(len(square_wave) * frequency)
@@ -69,7 +78,7 @@ def tone(pin, frequency, duration=1, length=100):
             dac.stop()
 
 
-def bitWrite(x, n, b):  # pylint: disable-msg=invalid-name
+def bitWrite(x: int, n: int, b: int) -> int:  # pylint: disable-msg=invalid-name
     """
     Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
     The return value is the original value with the changed bit.
@@ -86,7 +95,11 @@ def bitWrite(x, n, b):  # pylint: disable-msg=invalid-name
     return x
 
 
-def shift_in(data_pin, clock, msb_first=True):
+def shift_in(
+    data_pin: digitalio.DigitalInOut,
+    clock: digitalio.DigitalInOut,
+    msb_first: bool = True,
+) -> int:
     """
     Shifts in a byte of data one bit at a time. Starts from either the LSB or
     MSB.
@@ -116,7 +129,13 @@ def shift_in(data_pin, clock, msb_first=True):
     return value
 
 
-def shift_out(data_pin, clock, value, msb_first=True, bitcount=8):
+def shift_out(
+    data_pin: digitalio.DigitalInOut,
+    clock: digitalio.DigitalInOut,
+    value: int,
+    msb_first: bool = True,
+    bitcount: int = 8,
+) -> None:
     """
     Shifts out a byte of data one bit at a time. Data gets written to a data
     pin. Then, the clock pulses hi then low
@@ -190,17 +209,17 @@ class DigitalOut:
       :param drive_mode digitalio.DriveMode: drive mode for the output
     """
 
-    def __init__(self, pin, **kwargs):
+    def __init__(self, pin: Pin, **kwargs: Any) -> None:
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_output(**kwargs)
 
     @property
-    def value(self):
+    def value(self) -> bool:
         """The digital logic level of the output pin."""
         return self.iopin.value
 
     @value.setter
-    def value(self, value):
+    def value(self, value: bool) -> None:
         self.iopin.value = value
 
 
@@ -212,21 +231,23 @@ class DigitalIn:
       :param pull digitalio.Pull: pull configuration for the input
     """
 
-    def __init__(self, pin, **kwargs):
+    def __init__(self, pin: Pin, **kwargs: Any) -> None:
         self.iopin = digitalio.DigitalInOut(pin)
         self.iopin.switch_to_input(**kwargs)
 
     @property
-    def value(self):
+    def value(self) -> bool:
         """The digital logic level of the input pin."""
         return self.iopin.value
 
     @value.setter
-    def value(self, value):  # pylint: disable-msg=no-self-use, unused-argument
+    def value(self, value: bool) -> None:  # pylint: disable=no-self-use
         raise AttributeError("Cannot set the value on a digital input.")
 
 
-def map_range(x, in_min, in_max, out_min, out_max):
+def map_range(
+    x: float, in_min: float, in_max: float, out_min: float, out_max: float
+) -> float:
     """
     Maps a number from one range to another.
     Note: This implementation handles values < in_min differently than arduino's map function does.
