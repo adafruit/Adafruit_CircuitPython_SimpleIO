@@ -10,6 +10,7 @@ The `simpleio` module contains classes to provide simple access to IO.
 
 * Author(s): Scott Shawcroft
 """
+
 try:
     from typing import Any
 
@@ -56,13 +57,9 @@ def tone(pin: Pin, frequency: float, duration: int = 1, length: float = 100) -> 
         length = 350000 // frequency
     try:
         # pin with PWM
-        # pylint: disable=no-member
-        with pwmio.PWMOut(
-            pin, frequency=int(frequency), variable_frequency=False
-        ) as pwm:
+        with pwmio.PWMOut(pin, frequency=int(frequency), variable_frequency=False) as pwm:
             pwm.duty_cycle = 0x8000
             time.sleep(duration)
-        # pylint: enable=no-member
     except ValueError:
         # pin without PWM
         sample_length = floor(length)
@@ -78,7 +75,7 @@ def tone(pin: Pin, frequency: float, duration: int = 1, length: float = 100) -> 
             dac.stop()
 
 
-def bitWrite(x: int, n: int, b: int) -> int:  # pylint: disable-msg=invalid-name
+def bitWrite(x: int, n: int, b: int) -> int:
     """
     Based on the Arduino bitWrite function, changes a specific bit of a value to 0 or 1.
     The return value is the original value with the changed bit.
@@ -241,13 +238,11 @@ class DigitalIn:
         return self.iopin.value
 
     @value.setter
-    def value(self, value: bool) -> None:  # pylint: disable=no-self-use
+    def value(self, value: bool) -> None:
         raise AttributeError("Cannot set the value on a digital input.")
 
 
-def map_range(
-    x: float, in_min: float, in_max: float, out_min: float, out_max: float
-) -> float:
+def map_range(x: float, in_min: float, in_max: float, out_min: float, out_max: float) -> float:
     """
     Maps a number from one range to another.
     Note: This implementation handles values < in_min differently than arduino's map function does.
