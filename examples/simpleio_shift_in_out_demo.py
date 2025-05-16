@@ -9,8 +9,10 @@ shifts data into and out of a data pin
 """
 
 import time
+
 import board
 import digitalio
+
 import simpleio
 
 # set up clock, data, and latch pins

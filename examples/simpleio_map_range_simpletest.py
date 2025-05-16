@@ -7,7 +7,9 @@
 =================================================
 maps a number from one range to another
 """
+
 import time
+
 import simpleio
 
 while True:

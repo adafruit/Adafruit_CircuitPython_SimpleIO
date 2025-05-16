@@ -7,10 +7,12 @@
 =================================================
 a short piezo song using tone()
 """
-import time
-import board
-import simpleio
 
+import time
+
+import board
+
+import simpleio
 
 while True:
     for f in (262, 294, 330, 349, 392, 440, 494, 523):
